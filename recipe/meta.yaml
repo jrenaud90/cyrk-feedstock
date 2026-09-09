@@ -1,19 +1,21 @@
 {% set name = "CyRK" %}
-{% set version = "0.18.1" %}
+{% set version = "0.19.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://files.pythonhosted.org/packages/source/{{ name[0] }}/{{ name }}/cyrk-{{ version }}.tar.gz
-  sha256: f661d3e7a0625113f83ced8e3636d7e0b962329663c498eaa06aba6034aa87d8
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/cyrk-{{ version }}.tar.gz
+  # Replace with the sha256 of the version's sdist on PyPI (see "conda-forge upload.md").
+  sha256: 47a253c204442fbe02626a8879412a63289bdd6bda447a3873dcd2a16e7c0ea6
 
 build:
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
   skip: true  # [py<39]
 
+# CyRK does not use OpenMP, so no OpenMP run time (vcomp14, llvm-openmp, libgomp) is needed in host or run.
 requirements:
   build:
     - {{ compiler('c') }}
@@ -23,22 +25,14 @@ requirements:
     - python
     - setuptools
     - numpy
-    # - numpy <2.0  # [py<313]
-    # - numpy >=2.0  # [py>=313]
     - cython
     - wheel
     - pip
-    - vcomp14      # [win]
-    - llvm-openmp  # [osx]
-    - libgomp      # [linux]
   run:
     - python
     - numpy
     - scipy
     - numba
-    - vcomp14      # [win]
-    - llvm-openmp  # [osx]
-    - libgomp      # [linux]
 
 test:
   imports:
